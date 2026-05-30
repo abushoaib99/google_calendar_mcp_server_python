@@ -2,9 +2,15 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that connects to **your own** Google Calendar. Built with [FastMCP](https://github.com/jlowin/fastmcp) and the Google Calendar API.
 
-Each user runs the server locally and authenticates with their Google account. No shared calendar or shared Google Cloud project is required beyond each user's own `credentials.json`.
+Each user can run the server **locally** with their own `credentials.json`, or use a **hosted** FastMCP Cloud URL (one Google account per deployment).
 
-## Quick start (use your own calendar)
+| I want to… | Read |
+|------------|------|
+| Use **my** calendar on my machine | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) — `credentials.json` required |
+| **Deploy** a hosted URL on FastMCP Cloud | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — secrets, not files in git |
+| Connect to someone else's hosted URL | Only add the `url` in Cursor — no `credentials.json` on your PC |
+
+## Quick start (local — your own calendar)
 
 ### 1. Clone and install
 
@@ -136,6 +142,11 @@ google_calendar_mcp_server_python/
 |------|-----------------|--------|
 | `credentials.json` | **You** (from Google Cloud) | OAuth client for your Google Cloud project |
 | `token.json` | **Auto** (after browser sign-in) | Access to **your** Google Calendar |
+
+## Documentation
+
+- **[docs/USER_GUIDE.md](docs/USER_GUIDE.md)** — `credentials.json`, sign-in, Cursor setup (for end users)
+- **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** — FastMCP Cloud deploy, `GOOGLE_CREDENTIALS_JSON` / `GOOGLE_TOKEN_JSON` secrets
 
 ## Security
 

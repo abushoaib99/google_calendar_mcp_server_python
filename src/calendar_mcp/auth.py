@@ -3,10 +3,12 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 from calendar_mcp.config import (
-    CREDENTIALS_PATH,
     SCOPES,
     TOKEN_PATH,
-    validate_credentials_file,
+    credentials_setup_instructions,
+    load_client_config,
+    load_token_data,
+    uses_cloud_secrets,
 )
 
 _creds: Credentials | None = None
@@ -16,24 +18,29 @@ def get_credentials() -> Credentials:
     """Load, refresh, or obtain OAuth credentials for the user's Google Calendar."""
     global _creds
 
-    validate_credentials_file()
+    client_config = load_client_config()
+    token_data = load_token_data()
 
-    if TOKEN_PATH.exists():
-        _creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
+    if token_data:
+        _creds = Credentials.from_authorized_user_info(token_data, SCOPES)
 
     if not _creds or not _creds.valid:
         if _creds and _creds.expired and _creds.refresh_token:
             _creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                str(CREDENTIALS_PATH), SCOPES
+        elif uses_cloud_secrets():
+            raise FileNotFoundError(
+                credentials_setup_instructions()
+                + "\n\nGenerate token.json locally with: uv run python scripts/oauth_setup.py"
             )
+        else:
+            flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
             _creds = flow.run_local_server(
                 port=0,
                 access_type="offline",
                 prompt="consent",
             )
 
-        TOKEN_PATH.write_text(_creds.to_json(), encoding="utf-8")
+        if not uses_cloud_secrets():
+            TOKEN_PATH.write_text(_creds.to_json(), encoding="utf-8")
 
     return _creds
