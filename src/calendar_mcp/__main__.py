@@ -2,8 +2,7 @@ from calendar_mcp.server import mcp
 
 
 def main() -> None:
-    # mcp.run(transport="stdio")
-    print("MCP RUNNING...")
+    mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":

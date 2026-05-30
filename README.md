@@ -53,7 +53,7 @@ If `credentials.json` is missing, the server raises `FileNotFoundError` with the
 
 ## Use with Cursor
 
-Add the server to your MCP config:
+Add the server to your MCP config. Use the **full path** to the venv Python — Cursor often runs MCP with a minimal `PATH`, so `"command": "uv"` frequently causes `connect_failure`:
 
 ```json
 {
@@ -62,24 +62,6 @@ Add the server to your MCP config:
       "command": "/absolute/path/to/google_calendar_mcp_server_python/.venv/bin/python",
       "args": ["-m", "calendar_mcp"],
       "cwd": "/absolute/path/to/google_calendar_mcp_server_python"
-    }
-  }
-}
-```
-
-Or with `uv`:
-
-```json
-{
-  "mcpServers": {
-    "google-calendar-mcp": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/google_calendar_mcp_server_python",
-        "run",
-        "calendar-mcp"
-      ]
     }
   }
 }
